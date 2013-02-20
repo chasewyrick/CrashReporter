@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "CrashLogsFolderReader.h"
 #import "SuspectsViewController.h"
 #import <UIKit/UIKit.h>
-#import "symbolicate.h"
 #import "ModalActionSheet.h"
 #import "move_as_root.h"
 
@@ -86,7 +85,7 @@ static inline NSUInteger index_of(NSUInteger sect, NSUInteger row, BOOL deleted_
 		ModalActionSheet* sheet = [[ModalActionSheet alloc] init2];
 		[sheet show];
 #if !TARGET_IPHONE_SIMULATOR
-		file = symbolicate(file, sheet);
+		//file = symbolicate(file, sheet);
 #endif
 		[group->files replaceObjectAtIndex:idx withObject:file];
 		[sheet hide];
