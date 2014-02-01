@@ -85,7 +85,12 @@ static inline NSUInteger index_of(NSUInteger sect, NSUInteger row, BOOL deleted_
 		ModalActionSheet* sheet = [[ModalActionSheet alloc] init2];
 		[sheet show];
 #if !TARGET_IPHONE_SIMULATOR
-		//file = symbolicate(file, sheet);
+		NSString *symbolicatedFile = [[file stringByDeletingPathExtension] stringByAppendingString:@".symbolicated.plist"];
+		NSString *command = [NSString stringWithFormat:@"symbolicate %@ > %@", file, symbolicatedFile];
+		int result = system([command UTF8String]);
+		if (result == 0) {
+			file = symbolicatedFile;
+		}
 #endif
 		[group->files replaceObjectAtIndex:idx withObject:file];
 		[sheet hide];
