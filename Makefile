@@ -1,6 +1,13 @@
 SUBPROJECTS = Application move_as_root
 
-export ARCHS =
+export IPHONE_ARCHS = armv6 armv7 arm64
+
+export SDKVERSION_armv6 = 5.1
+export INCLUDE_SDKVERSION_armv6 = 7.0
+export THEOS_PLATFORM_SDK_ROOT_armv6 = /Applications/Xcode_Legacy.app/Contents/Developer
+
+
+#export ARCHS =
 
 #export SDKTARGET = arm-apple-darwin11
 #export TARGET_CXX = clang -ccc-host-triple $(SDKTARGET)

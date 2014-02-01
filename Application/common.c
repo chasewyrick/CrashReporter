@@ -31,7 +31,8 @@ unsigned char nibble(char c) {
 
 int convertStringToInteger(const char* str, int len) {
 	int res = 0;
-	for (int i = 0; i < len; ++ i) {
+	int i;
+	for (i = 0; i < len; ++ i) {
 		res *= 10;
 		res += str[i] - '0';
 	}
@@ -40,7 +41,8 @@ int convertStringToInteger(const char* str, int len) {
 
 unsigned long long convertHexStringToLongLong(const char* str, int len) {
 	unsigned long long res = 0;
-	for (int i = 0; i < len; ++ i) {
+	int i;
+	for (i = 0; i < len; ++ i) {
 		unsigned char n = nibble(str[i]);
 		if (n != 0xFF)
 			res = res * 16 + n;
