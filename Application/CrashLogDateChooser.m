@@ -85,6 +85,8 @@ static inline NSUInteger index_of(NSUInteger sect, NSUInteger row, BOOL deleted_
 		// Symbolicate.
 		ModalActionSheet* sheet = [[ModalActionSheet alloc] init2];
 		[sheet show];
+		UIWindow *window = tableView.window;
+		window.userInteractionEnabled = NO;
 #if !TARGET_IPHONE_SIMULATOR
 		NSString *symbolicatedFile = [[file stringByDeletingPathExtension] stringByAppendingString:@".symbolicated.plist"];
 		const char *symbolicatedFilePath = [symbolicatedFile UTF8String];
@@ -107,6 +109,7 @@ static inline NSUInteger index_of(NSUInteger sect, NSUInteger row, BOOL deleted_
 			[task release];
 		}
 #endif
+		window.userInteractionEnabled = YES;
 		[group->files replaceObjectAtIndex:idx withObject:file];
 		[sheet hide];
 		[sheet release];
