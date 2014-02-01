@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #import "CrashLogsFolderReader.h"
 #import "SuspectsViewController.h"
 #import <UIKit/UIKit.h>
+#import <Foundation/NSTask.h>
 #import "ModalActionSheet.h"
 #import "move_as_root.h"
 
@@ -86,10 +87,24 @@ static inline NSUInteger index_of(NSUInteger sect, NSUInteger row, BOOL deleted_
 		[sheet show];
 #if !TARGET_IPHONE_SIMULATOR
 		NSString *symbolicatedFile = [[file stringByDeletingPathExtension] stringByAppendingString:@".symbolicated.plist"];
-		NSString *command = [NSString stringWithFormat:@"symbolicate %@ > %@", file, symbolicatedFile];
-		int result = system([command UTF8String]);
-		if (result == 0) {
-			file = symbolicatedFile;
+		const char *symbolicatedFilePath = [symbolicatedFile UTF8String];
+		NSTask *task = [[NSTask alloc] init];
+		[task setLaunchPath:@"/usr/bin/symbolicate"];
+		[task setArguments:[NSArray arrayWithObjects:file, nil]];
+		int fd = creat(symbolicatedFilePath, 0644);
+		if (fd != -1) {
+			NSFileHandle *fileHandle = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
+			[task setStandardOutput:fileHandle];
+			[task launch];
+			[fileHandle closeFile];
+			[fileHandle release];
+			[task waitUntilExit];
+			if ([task terminationStatus] == 0) {
+				file = symbolicatedFile;
+			} else {
+				unlink(symbolicatedFilePath);
+			}
+			[task release];
 		}
 #endif
 		[group->files replaceObjectAtIndex:idx withObject:file];
